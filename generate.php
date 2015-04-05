@@ -1,0 +1,15 @@
+<?php
+$request=curl_init("https://incometaxindiaefiling.gov.in/e-Filing/Services/KnowYourPan.html");
+curl_setopt_array($request,[
+	CURLOPT_COOKIEFILE=>"cookie.txt",
+	CURLOPT_COOKIEJAR=>"cookie.txt",
+	CURLOPT_RETURNTRANSFER=>true
+]);
+preg_match("/captchaImg.+?src=\"(.+?)\"/s",curl_exec($request),$captchaSource);
+curl_setopt_array($request,[
+	CURLOPT_BINARYTRANSFER=>true,
+	CURLOPT_URL=>"https://incometaxindiaefiling.gov.in".$captchaSource[1]
+]);
+file_put_contents("captcha.png",curl_exec($request));
+curl_close($request);
+?>
